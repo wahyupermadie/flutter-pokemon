@@ -26,7 +26,7 @@ class Pokemon {
   String num;
   String name;
   String img;
-  List<String> type;
+  List<dynamic> type;
   String height;
   String weight;
   String candy;
@@ -35,8 +35,8 @@ class Pokemon {
   double spawnChance;
   double avgSpawns;
   String spawnTime;
-  List<double> multipliers;
-  List<String> weaknesses;
+  List<dynamic> multipliers;
+  List<dynamic> weaknesses;
   List<NextEvolution> nextEvolution;
   List<PrevEvolution> prevEvolution;
 
@@ -64,17 +64,17 @@ class Pokemon {
     num = json['num'];
     name = json['name'];
     img = json['img'];
-    type = json['type'].cast<String>();
+    type = json['type'] ?? [];
     height = json['height'];
     weight = json['weight'];
     candy = json['candy'];
-    candyCount = json['candy_count'];
+    candyCount = json['candy_count'] ?? 0;
     egg = json['egg'];
-    spawnChance = json['spawn_chance'];
-    avgSpawns = json['avg_spawns'];
-    spawnTime = json['spawn_time'];
-    multipliers = json['multipliers'].cast<double>();
-    weaknesses = json['weaknesses'].cast<String>();
+    spawnChance = json['spawn_chance'].toDouble() ?? 0.0;
+    avgSpawns = json['avg_spawns'].toDouble() ?? 0.0;
+    spawnTime = json['spawn_time'] ?? 0.0;
+    multipliers = json['multipliers'];
+    weaknesses = json['weaknesses'];
     if (json['next_evolution'] != null) {
       nextEvolution = new List<NextEvolution>();
       json['next_evolution'].forEach((v) {
@@ -99,10 +99,10 @@ class Pokemon {
     data['height'] = this.height;
     data['weight'] = this.weight;
     data['candy'] = this.candy;
-    data['candy_count'] = this.candyCount;
+    // data['candy_count'] = this.candyCount;
     data['egg'] = this.egg;
-    data['spawn_chance'] = this.spawnChance;
-    data['avg_spawns'] = this.avgSpawns;
+    // data['spawn_chance'] = this.spawnChance;
+    // data['avg_spawns'] = this.avgSpawns;
     data['spawn_time'] = this.spawnTime;
     data['multipliers'] = this.multipliers;
     data['weaknesses'] = this.weaknesses;

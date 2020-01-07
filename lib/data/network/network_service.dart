@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_pockemon/data/model/pokemon_model.dart';
 import 'package:flutter_pockemon/utils/constants.dart';
@@ -9,9 +11,11 @@ class PokemonService {
   
   Future fetchPokemon() async {
     try{
-      var response = await dio.get(baseUrl);
-      return Pokemon.fromJson(response.data);
+      final response = await dio.get(baseUrl);
+      print(response.data);
+      return PokemonResponse.fromJson(json.decode(response.data));
     }catch(e){
+      print(e);
       return e;
     }
   }
