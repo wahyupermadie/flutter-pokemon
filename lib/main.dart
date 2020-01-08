@@ -4,6 +4,7 @@ import 'package:flutter_pockemon/bloc/pokemon_bloc.dart';
 import 'package:flutter_pockemon/data/model/pokemon_model.dart';
 import 'package:flutter_pockemon/data/network/network_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'bloc/pokemon_event.dart';
 import 'bloc/pokemon_state.dart';
 
@@ -117,21 +118,35 @@ class _MoviesList extends StatelessWidget {
   Container cardConatiner(BuildContext context, int index){
     return Container(
       margin: EdgeInsets.all(1.0),
-      child: Card(
-        elevation: 8.0,
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              flex: 1,
-              child: Image.network(pokemons[index].img),
-            ),
-            Flexible(
-              flex: 1,
-              child: Text(pokemons[index].name),
-            ),
-          ],
+      child: InkWell(
+        onTap: () => Scaffold.of(context).showSnackBar(
+          snackBar(pokemons[index].name)
         ),
-      ),
+        child: Card(
+          elevation: 8.0,
+          child: Column(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.topCenter,
+                height: 120.0,
+                child: FadeInImage.memoryNetwork(
+                  placeholder: kTransparentImage,
+                  image: pokemons[index].img,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+                child:  Text(pokemons[index].name,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold
+                          ),
+                        )
+              )
+            ],
+          ),
+        ),
+      )
     );
   }
 
@@ -139,7 +154,7 @@ class _MoviesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 2,
-      childAspectRatio: 0.80,
+      childAspectRatio: 0.99,
       children: List.generate(pokemons.length, (index){
         return cardConatiner(context, index);
       }),
