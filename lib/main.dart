@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pockemon/bloc/pokemon_bloc.dart';
+import 'package:flutter_pockemon/data/model/pokemon_model.dart';
 import 'package:flutter_pockemon/data/network/network_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/pokemon_event.dart';
@@ -70,7 +71,7 @@ class PokemonListState extends State<PokemonListWidget>{
             bloc: pokemonBloc, 
             builder: (BuildContext context, PokemonState state) {
               if(state is PokemonLoadedState){
-                  return Text("wkkwkwkw");
+                  return _MoviesList(pokemons: state.pokemons.pokemon,);
               }
               else if(state is PokemonErrorState){
                   return Center(
@@ -97,3 +98,52 @@ SnackBar snackBar(text) {
     backgroundColor: Colors.red,
   );
 }
+
+class _MoviesList extends StatelessWidget {
+  final List<Pokemon> pokemons;
+
+  _MoviesList({this.pokemons});
+  
+  ListTile _listTile(BuildContext context, int index) {
+    return ListTile(
+      title: new Text(pokemons[index].name.toString()),
+      subtitle: new Text(pokemons[index].img.toString(),
+        overflow: TextOverflow.ellipsis,
+        maxLines: 3,
+        softWrap: true,),
+    );
+  }
+
+  Container cardConatiner(BuildContext context, int index){
+    return Container(
+      margin: EdgeInsets.all(1.0),
+      child: Card(
+        elevation: 8.0,
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              flex: 1,
+              child: Image.network(pokemons[index].img),
+            ),
+            Flexible(
+              flex: 1,
+              child: Text(pokemons[index].name),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 2,
+      childAspectRatio: 0.80,
+      children: List.generate(pokemons.length, (index){
+        return cardConatiner(context, index);
+      }),
+    );
+  }
+}
+

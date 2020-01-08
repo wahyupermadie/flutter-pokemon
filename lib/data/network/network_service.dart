@@ -12,7 +12,6 @@ class PokemonService {
   Future fetchPokemon() async {
     try{
       final response = await dio.get(baseUrl);
-      print(response.data);
       return PokemonResponse.fromJson(json.decode(response.data));
     }catch(e){
       print(e);
