@@ -4,6 +4,7 @@ import 'package:flutter_pockemon/bloc/pokemon_bloc.dart';
 import 'package:flutter_pockemon/data/model/pokemon_model.dart';
 import 'package:flutter_pockemon/data/network/network_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_pockemon/router.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'bloc/pokemon_event.dart';
 import 'bloc/pokemon_state.dart';
@@ -15,6 +16,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: Router.generateRoute,
+      initialRoute: PokemonMainRoute,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -99,49 +102,68 @@ SnackBar snackBar(text) {
     backgroundColor: Colors.red,
   );
 }
+Color pokeColor(Pokemon pokemon){
+  if (pokemon.type[0] == "Grass") {
+    return Colors.green;
+  }else if(pokemon.type[0] == "Water"){
+    return Colors.blue;
+  }else{
+    return Colors.redAccent;
+  }
+}
 
 class _MoviesList extends StatelessWidget {
   final List<Pokemon> pokemons;
 
   _MoviesList({this.pokemons});
-  
-  ListTile _listTile(BuildContext context, int index) {
-    return ListTile(
-      title: new Text(pokemons[index].name.toString()),
-      subtitle: new Text(pokemons[index].img.toString(),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 3,
-        softWrap: true,),
-    );
-  }
 
   Container cardConatiner(BuildContext context, int index){
     return Container(
-      margin: EdgeInsets.all(1.0),
+      margin: EdgeInsets.all(8.0),
       child: InkWell(
-        onTap: () => Scaffold.of(context).showSnackBar(
-          snackBar(pokemons[index].name)
-        ),
+        onTap: () => Navigator.pushNamed(context, PokemonDetailRoute, arguments: pokemons[index]),
         child: Card(
+          color: pokeColor(pokemons[index]),
           elevation: 8.0,
           child: Column(
             children: <Widget>[
-              Container(
-                alignment: Alignment.topCenter,
-                height: 120.0,
-                child: FadeInImage.memoryNetwork(
-                  placeholder: kTransparentImage,
-                  image: pokemons[index].img,
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
-                child:  Text(pokemons[index].name,
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold
-                          ),
+              Stack(
+                children: <Widget>[
+                  Positioned(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Image.asset(
+                                "assets/images/pokeball.png",
+                                color: Colors.white.withOpacity(0.15),
+                                width: 120,
+                                height: 120,
+                              ),
                         )
+                    ),
+                    Container(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                              alignment: Alignment.topCenter,
+                              height: 120.0,
+                              child: FadeInImage.memoryNetwork(
+                                placeholder: kTransparentImage,
+                                image: pokemons[index].img,
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+                              child:  Text(pokemons[index].name,
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold
+                                        ),
+                                      )
+                            )
+                        ],
+                      ),
+                    ),
+                ],
               )
             ],
           ),
@@ -154,7 +176,6 @@ class _MoviesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 2,
-      childAspectRatio: 0.99,
       children: List.generate(pokemons.length, (index){
         return cardConatiner(context, index);
       }),
