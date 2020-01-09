@@ -164,7 +164,7 @@ class _MoviesList extends StatelessWidget {
                             Container(
                               alignment: Alignment.center,
                               width: double.infinity,
-                              margin: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
+                              margin: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
                               child:  Text(pokemons[index].name,
                                         style: TextStyle(
                                           fontSize: 16.0,
