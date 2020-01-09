@@ -102,6 +102,7 @@ SnackBar snackBar(text) {
     backgroundColor: Colors.red,
   );
 }
+
 Color pokeColor(Pokemon pokemon){
   if (pokemon.type[0] == "Grass") {
     return Colors.green;
@@ -129,18 +130,8 @@ class _MoviesList extends StatelessWidget {
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                  Positioned(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Image.asset(
-                                "assets/images/pokeball.png",
-                                color: Colors.white.withOpacity(0.15),
-                                width: 120,
-                                height: 120,
-                              ),
-                        )
-                    ),
                     Container(
+                      width: double.infinity,
                       child: Column(
                         children: <Widget>[
                           Container(
@@ -152,7 +143,28 @@ class _MoviesList extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+                              alignment: Alignment.center,
+                              width: double.infinity,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: pokemons[index].type.map((f) => 
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      child: FilterChip(
+                                        backgroundColor: Colors.lightGreen,
+                                        label: Text(
+                                          f,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        onSelected: (b) {}),
+                                    )
+                                  ).toList()
+                                ),
+                              ),
+                            Container(
+                              alignment: Alignment.center,
+                              width: double.infinity,
+                              margin: EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 0.0),
                               child:  Text(pokemons[index].name,
                                         style: TextStyle(
                                           fontSize: 16.0,
@@ -162,6 +174,17 @@ class _MoviesList extends StatelessWidget {
                             )
                         ],
                       ),
+                    ),
+                    Positioned(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Image.asset(
+                                "assets/images/pokeball.png",
+                                color: Colors.white.withOpacity(0.15),
+                                width: 120,
+                                height: 120,
+                              ),
+                        )
                     ),
                 ],
               )
@@ -176,6 +199,7 @@ class _MoviesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 2,
+      childAspectRatio: 0.8,
       children: List.generate(pokemons.length, (index){
         return cardConatiner(context, index);
       }),
