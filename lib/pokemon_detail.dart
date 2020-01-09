@@ -4,6 +4,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_pockemon/data/model/pokemon_model.dart';
 import 'package:flutter_pockemon/router.dart';
+import 'package:flutter_pockemon/utils/screen_widget_animation1.dart';
+
+import 'package:oktoast/oktoast.dart';
 
 void main() => runApp(MaterialApp(
       onGenerateRoute: Router.generateRoute,
@@ -12,17 +15,42 @@ void main() => runApp(MaterialApp(
       home: DetailPokemon()
 ));
 
-class DetailPokemon extends StatelessWidget {
+class DetailPokemon extends StatefulWidget {
   final Pokemon pokemon;
   DetailPokemon({this.pokemon});
 
   @override
+  State createState() => DetailPokemonState();
+}
+
+class DetailPokemonState extends State<DetailPokemon> with SingleTickerProviderStateMixin {
+
+  AnimationController rectangle5ButtonAnimationController;
+  
+  @override
+  void initState() {
+  
+    super.initState();
+    this.rectangle5ButtonAnimationController = AnimationController(duration: Duration(milliseconds: 1000), vsync: this);
+  }
+  
+  @override
+  void dispose() {
+  
+    super.dispose();
+    this.rectangle5ButtonAnimationController.dispose();
+  }
+  
+  void onRectangle5Pressed(BuildContext context) => startAnimationOne();
+  
+  void startAnimationOne() => this.rectangle5ButtonAnimationController.forward();
+
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.cyan,
         appBar: AppBar(
           backgroundColor: Colors.cyan,
-          title: Text(pokemon.name),
+          title: Text(widget.pokemon.name),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -47,11 +75,11 @@ class DetailPokemon extends StatelessWidget {
                               children: <Widget>[
                                 Flexible(
                                   flex: 1,
-                                  child: Text(pokemon.weight),
+                                  child: Text(widget.pokemon.weight),
                                 ),
                                 Flexible(
                                   flex: 1,
-                                  child: Text(pokemon.height),
+                                  child: Text(widget.pokemon.height),
                                 )
                               ],
                             ),
@@ -69,11 +97,11 @@ class DetailPokemon extends StatelessWidget {
                         Column(
                           children: <Widget>[
                             Image.network(
-                              this.pokemon.img, 
+                              this.widget.pokemon.img, 
                               width: 200.0,
                               fit:BoxFit.fill),
                             Text(
-                              this.pokemon.name,
+                              this.widget.pokemon.name,
                               style: TextStyle(
                                 fontSize: 24.0,
                                 fontWeight: FontWeight.bold
@@ -120,7 +148,7 @@ class DetailPokemon extends StatelessWidget {
                               width: double.infinity,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: pokemon.type.map((f) => 
+                                children: widget.pokemon.type.map((f) => 
                                   Container(
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.all(8),
@@ -144,7 +172,7 @@ class DetailPokemon extends StatelessWidget {
                               width: double.infinity,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: pokemon.weaknesses.map((f) => 
+                                children: widget.pokemon.weaknesses.map((f) => 
                                   Container(
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.all(8),
@@ -168,7 +196,7 @@ class DetailPokemon extends StatelessWidget {
                               width: double.infinity,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                  children: pokemon.nextEvolution == null 
+                                  children: widget.pokemon.nextEvolution == null 
                                   ?  
                                     [
                                       Container(
@@ -184,7 +212,7 @@ class DetailPokemon extends StatelessWidget {
                                       )
                                     ]
                                   :
-                                  pokemon.nextEvolution.map((f) => 
+                                  widget.pokemon.nextEvolution.map((f) => 
                                     Container(
                                         alignment: Alignment.center,
                                         padding: EdgeInsets.all(8),
@@ -208,7 +236,7 @@ class DetailPokemon extends StatelessWidget {
                               width: double.infinity,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                  children: pokemon.prevEvolution == null 
+                                  children: widget.pokemon.prevEvolution == null 
                                   ?  
                                     [
                                       Container(
@@ -217,14 +245,14 @@ class DetailPokemon extends StatelessWidget {
                                         child: FilterChip(
                                           backgroundColor: Colors.redAccent,
                                           label: Text(
-                                            "Tidak Ada",
+                                             "Tidak Ada",
                                             style: TextStyle(color: Colors.white),
                                           ),
                                           onSelected: (b) {}),
                                       )
                                     ]
                                   :
-                                  pokemon.prevEvolution.map((f) => 
+                                  widget.pokemon.prevEvolution.map((f) => 
                                     Container(
                                         alignment: Alignment.center,
                                         padding: EdgeInsets.all(8),
@@ -245,7 +273,35 @@ class DetailPokemon extends StatelessWidget {
                     ],
                   )
                 )
-              )
+              ),
+              Container(
+                margin: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+                width: double.infinity,
+                child: ScreenWidgetAnimation1(
+                  animationController: this.rectangle5ButtonAnimationController,
+                  child: RaisedButton(
+                    onPressed: () => {
+                      this.onRectangle5Pressed(context),
+                      showToastWidget(Text('hello oktoast'))
+                    },
+                    color: Colors.grey,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(29.5)),
+                    ),
+                    textColor: Color.fromARGB(255, 0, 0, 0),
+                    padding: EdgeInsets.all(0),
+                    child: Text(
+                      "Tekan Saya Bro",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         )
